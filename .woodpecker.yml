@@ -89,29 +89,3 @@ pipeline:
       ref:
         include: refs/tags/kklib_v*
         exclude: refs/tags/*rc*
-      
-  notify:
-    image: plugins/slack:1
-    webhook: https://hooks.slack.com/services/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
-    channel: order-api-ci
-    link_names: true
-    template: >
-      {{#success build.status}}
-        [PR] {{repo.name}}/#{{build.number}} succeeded. {{build.author}} {{build.event}} to {{build.branch}}.
-        CI: {{build.link}}
-        GIT: https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{build.pull}}
-        Message: {{build.message}}
-      {{else}}
-        [PR] {{repo.name}}/#{{build.number}} fail. {{build.author}} {{build.event}} to {{build.branch}}.
-        CI: {{build.link}}
-        GIT: https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{build.pull}}
-        Message: {{build.message}}
-      {{/success}}
-    when:
-      local: false
-      event:
-        - pull_request
-        - tag
-      status:
-        - success
-        - failure
